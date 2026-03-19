@@ -414,6 +414,87 @@
   .rest-day h3 { font-size: 18px; color: var(--text); margin-bottom: 8px; }
   .rest-day p { font-size: 14px; line-height: 1.6; }
 
+  /* YOGA INFO SHEET */
+  .sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.6);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s;
+  }
+  .sheet-backdrop.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .sheet {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+    border-top: 1px solid var(--border);
+    padding: 0 20px calc(32px + var(--safe-bottom));
+    z-index: 201;
+    transform: translateY(100%);
+    transition: transform .3s cubic-bezier(.32,.72,0,1);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .sheet.visible { transform: translateY(0); }
+  .sheet-handle {
+    width: 36px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 12px auto 20px;
+  }
+  .sheet-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .sheet-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .sheet-poses-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .pose-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+  .pose-name {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 3px;
+  }
+  .pose-name .pose-sanskrit {
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .pose-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .yoga-tag {
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .yoga-tag:active { border-color: var(--purple); color: #AFA9EC; }
+
   /* GLOBAL TIMER OVERLAY */
   .global-timer {
     position: fixed;
@@ -467,6 +548,16 @@
   <span class="global-timer-label" id="globalTimerLabel">Rest timer</span>
   <span class="global-timer-time" id="globalTimerTime">0:00</span>
   <button class="global-timer-stop" onclick="stopGlobalTimer()">Stop</button>
+</div>
+
+<!-- YOGA INFO SHEET -->
+<div class="sheet-backdrop" id="sheetBackdrop" onclick="closeSheet()"></div>
+<div class="sheet" id="yogaSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title" id="sheetTitle"></div>
+  <div class="sheet-desc" id="sheetDesc"></div>
+  <div class="sheet-poses-label">Relevant poses</div>
+  <div id="sheetPoses"></div>
 </div>
 
 <nav class="bottom-nav">
@@ -681,7 +772,7 @@ function renderSession() {
 
     if (section.yogaFoci) {
       html += `<div class="ex-card"><div class="yoga-tags">` +
-        section.yogaFoci.map(f => `<span class="yoga-tag">${f}</span>`).join('') +
+        section.yogaFoci.map(f => `<span class="yoga-tag" onclick="openYogaSheet('${f.replace(/'/g, "\\'")}')">${f} <span style="color:var(--muted);font-size:10px;">&#9432;</span></span>`).join('') +
         `</div></div>`;
     } else if (section.pullup) {
       html += pullupPhases.map(p => `
@@ -720,6 +811,12 @@ function renderSession() {
           </div>
           ${ex.sets ? renderSets(eKey, ex.sets, session) : ''}
           ${ex.timer ? renderTimer(eKey, ex.timer) : ''}
+          <div style="margin-top:10px;">
+            <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise form')}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:4px 9px;background:var(--surface2);">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+              Search on YouTube
+            </a>
+          </div>
         </div>`;
         exIdx++;
       });
@@ -875,6 +972,164 @@ function showScreen(name) {
   document.getElementById('screen-' + name).classList.add('active');
   document.getElementById('nav-' + name).classList.add('active');
   if (name === 'history') renderHistory();
+}
+
+// ---- YOGA INFO ----
+const yogaInfo = {
+  "Hip flexors": {
+    desc: "The hip flexors are a group of muscles at the front of the hip -- primarily the iliopsoas -- that lift the knee toward the chest. Surfers and people who sit a lot tend to have chronically tight hip flexors, which pulls the pelvis forward and compresses the lower back. Lengthening these muscles improves paddling posture, pop-up mechanics and knee tracking.",
+    poses: [
+      { name: "Low lunge", sanskrit: "Anjaneyasana", desc: "Back knee down, front foot between hands. Sink hips forward and down. The classic hip flexor opener -- hold 90 sec each side." },
+      { name: "Crescent lunge", sanskrit: "Ashta Chandrasana", desc: "Same as low lunge but back knee lifted. Adds quad stretch and balance challenge." },
+      { name: "Lizard pose", sanskrit: "Utthan Pristhasana", desc: "Front foot outside the same-side hand. Deep hip flexor and groin stretch. Can lower the back knee for more intensity." },
+      { name: "Pigeon prep", sanskrit: "Eka Pada Rajakapotasana prep", desc: "Front shin across the mat, back leg extended. Opens hip flexor of the back leg while stretching the glute of the front." },
+    ]
+  },
+  "Glute activation": {
+    desc: "Before strength work, the glutes often need to be 'woken up' -- especially if you sit a lot. Inactive glutes shift load to the knees and lower back. Activation exercises use light, targeted movements to fire the glute med and glute max before they're needed for heavier work.",
+    poses: [
+      { name: "Bridge pose", sanskrit: "Setu Bandha Sarvangasana", desc: "Lying on back, feet flat, press hips up. Squeeze glutes at the top. Good activation before strength sets." },
+      { name: "Warrior III", sanskrit: "Virabhadrasana III", desc: "Standing on one leg, hinge forward with the back leg extending behind. Strong glute activation for the standing leg." },
+      { name: "Chair pose", sanskrit: "Utkatasana", desc: "Feet together or hip-width, sit back as if into a chair. Fires glutes and quads simultaneously." },
+      { name: "Goddess pose", sanskrit: "Utkata Konasana", desc: "Wide stance, toes out, deep squat. Opens hips while activating glutes and inner thighs." },
+    ]
+  },
+  "Pigeon / figure-4 holds": {
+    desc: "These are sustained holds targeting the deep external rotators of the hip -- particularly the piriformis. Tightness here affects knee tracking, lower back comfort and surfing stance. Figure-4 is the gentler supine version; pigeon is the deeper floor version. Both benefit enormously from holding 2-3 minutes rather than rushing through.",
+    poses: [
+      { name: "Sleeping pigeon", sanskrit: "Eka Pada Rajakapotasana (reclined)", desc: "Front shin across mat, fold forward over it. Hold 2-3 min each side. The gold standard for deep external hip rotation." },
+      { name: "Supine figure-4", sanskrit: "Supta Kapotasana", desc: "On your back, cross one ankle over the opposite knee, flex the foot. Gentler than pigeon -- good for knee issues." },
+      { name: "Thread the needle (seated)", sanskrit: "Parivrtta Sukhasana variation", desc: "Seated cross-legged, twist and thread one arm under -- targets the same deep rotators with a spinal twist added." },
+    ]
+  },
+  "Low lunge progression": {
+    desc: "A low lunge progression means gradually deepening the lunge over the course of a session -- starting with the back knee down, then lifting it, then adding a twist or backbend. For knee rehab specifically, it's also about progressively loading the knee into flexion under control, adding a few degrees of depth each week as the joint becomes more comfortable.",
+    poses: [
+      { name: "Low lunge (knee down)", sanskrit: "Anjaneyasana", desc: "Start here. Back knee on mat, hands on front thigh or floor. Focus on sinking hips, not arching back." },
+      { name: "Crescent lunge (knee up)", sanskrit: "Ashta Chandrasana", desc: "Progress here once the low lunge feels stable. Back knee lifts, arms reach up." },
+      { name: "Twisted lunge", sanskrit: "Parivrtta Anjaneyasana", desc: "From lunge, twist toward the front knee. Adds thoracic rotation on top of the hip flexor stretch." },
+      { name: "High lunge with backbend", sanskrit: "Alanasana variation", desc: "Arms up, gentle lift through the chest. Full progression -- hip flexor, quad, thoracic extension all in one." },
+    ]
+  },
+  "Gentle knee flexion": {
+    desc: "For your meniscus rehab, gently loading the knee into progressive flexion -- rather than avoiding it -- is exactly what builds tolerance and restores range. The goal is to find the edge of comfortable range and hold there briefly, adding a few degrees each week. Never force it; pain is a signal to back off.",
+    poses: [
+      { name: "Hero pose", sanskrit: "Virasana", desc: "Kneeling, sit back between the heels. Start with a block under the sit bones and reduce height over weeks. Classic progressive knee flexion." },
+      { name: "Child's pose", sanskrit: "Balasana", desc: "Kneel and fold forward. Gentle passive knee flexion with gravity -- good gauge of where your range is today." },
+      { name: "Thunderbolt pose", sanskrit: "Vajrasana", desc: "Kneeling, sitting on the heels (not between them). Simpler than hero pose, good starting point." },
+      { name: "Supported squat", sanskrit: "Malasana (supported)", desc: "Deep squat with heels elevated on a rolled mat or block. Builds toward full squat depth -- highly relevant for surfing." },
+    ]
+  },
+  "Thoracic rotation": {
+    desc: "The thoracic spine -- the 12 vertebrae of the mid and upper back -- is designed to rotate, but modern posture (desk work, paddling, rowing) tends to lock it up. Restricted thoracic rotation forces compensation from the lower back and shoulders. For surfing, free thoracic rotation is essential for reading waves, trimming and turning.",
+    poses: [
+      { name: "Seated spinal twist", sanskrit: "Ardha Matsyendrasana", desc: "Seated, one leg extended, other foot crosses over. Twist toward the bent knee. The classic thoracic rotator." },
+      { name: "Supine twist", sanskrit: "Supta Matsyendrasana", desc: "On your back, knees fall to one side while arms open wide. Gentle and accessible -- good for daily rotation maintenance." },
+      { name: "Thread the needle", sanskrit: "Parsva Balasana", desc: "On hands and knees, thread one arm under the body and rest the shoulder on the floor. Deep thoracic rotation with gravity assist." },
+      { name: "Revolved triangle", sanskrit: "Parivrtta Trikonasana", desc: "Standing, wide stance, one hand to the floor, other arm reaches up. Strong thoracic rotation with hamstring stretch." },
+    ]
+  },
+  "Shoulder opening": {
+    desc: "Paddling and rowing both involve a lot of internal shoulder rotation and forward reach. Over time this shortens the chest and anterior shoulder, pulls the shoulders forward and can impinge the rotator cuff. Shoulder opening works to reverse this -- lengthening the pec minor, anterior deltoid and biceps tendon -- and is essential for long-term shoulder health.",
+    poses: [
+      { name: "Cow face arms", sanskrit: "Gomukhasana (arms only)", desc: "One arm reaches up and bends behind the head, other reaches down and bends up behind the back. They aim to clasp. Deep shoulder opener for both sides simultaneously." },
+      { name: "Eagle arms", sanskrit: "Garudasana (arms only)", desc: "Arms cross and wrap, elbows lift. Stretches the back of the shoulder and scapular region -- counter to all the pulling work." },
+      { name: "Doorframe chest stretch", sanskrit: "No Sanskrit -- functional", desc: "Stand in a doorframe, arms at 90 degrees on the frame, walk through. Direct anterior shoulder and pec stretch." },
+      { name: "Puppy pose", sanskrit: "Uttana Shishosana", desc: "On hands and knees, walk hands forward and lower chest toward floor, hips stay over knees. Opens the whole shoulder girdle and thoracic spine." },
+    ]
+  },
+  "Chest + pec stretch": {
+    desc: "The pectoralis major and minor get chronically shortened by paddling, rowing, and any pushing or reaching forward. Tight pecs internally rotate the shoulder, compress the chest and contribute to the rounded-shoulder posture that's so common in surfers. Stretching the pecs regularly keeps the shoulder in a healthier position and reduces injury risk.",
+    poses: [
+      { name: "Fish pose", sanskrit: "Matsyasana", desc: "On your back, arch the upper back, crown of head lightly on floor, chest opens to ceiling. Passive pec opener -- hold 1-2 min." },
+      { name: "Supported fish (on block)", sanskrit: "Matsyasana variation", desc: "Block under the thoracic spine. Lets you fully relax and passively open the chest. Very effective." },
+      { name: "Camel pose", sanskrit: "Ustrasana", desc: "Kneeling, hands to heels, chest lifts. Strong active chest and shoulder opener -- also a hip flexor stretch." },
+      { name: "Sphinx pose", sanskrit: "Salamba Bhujangasana", desc: "Prone, forearms on floor, gentle chest lift. Entry-level backbend that opens the pecs without compressing the lower back." },
+    ]
+  },
+  "Spinal extension": {
+    desc: "Spinal extension -- bending backward -- counteracts the flexed-forward posture of surfing, paddling, and sitting. It decompresses the vertebral discs, opens the front body, and strengthens the posterior chain along the spine. For surfers, it also directly trains the pop-up position.",
+    poses: [
+      { name: "Cobra pose", sanskrit: "Bhujangasana", desc: "Prone, hands under shoulders, lift the chest. Keep elbows soft. Entry-level backbend -- directly mimics the pop-up position." },
+      { name: "Upward facing dog", sanskrit: "Urdhva Mukha Svanasana", desc: "Like cobra but arms fully extended and thighs off the floor. More demanding version of the same shape." },
+      { name: "Bow pose", sanskrit: "Dhanurasana", desc: "Prone, bend knees, reach back and hold ankles, lift chest and thighs. Full spinal extension and quad stretch." },
+      { name: "Bridge pose", sanskrit: "Setu Bandha Sarvangasana", desc: "Supine backbend -- gentler on the lumbar spine than floor backbends. Great for spinal extension with glute activation." },
+    ]
+  },
+  "Ankle + foot mobility": {
+    desc: "Ankle dorsiflexion -- the ability to bend the ankle so the shin moves toward the foot -- is directly limiting for squat depth, surf stance and knee tracking. Restricted ankles force the knee to collapse inward or the heel to rise, both of which load the knee badly. Foot mobility also matters for balance on the board and comfort in kneeling positions.",
+    poses: [
+      { name: "Toes pose", sanskrit: "Prapadasana", desc: "Kneel sitting on the heels with toes tucked under. Intense stretch for the plantar fascia and toe extensors. Hold 1-2 min -- it burns, but it works." },
+      { name: "Ankle circles in easy pose", sanskrit: "Sukhasana variation", desc: "Seated, place one foot on the opposite thigh and circle the ankle slowly. Improves joint lubrication and range." },
+      { name: "Squat pose", sanskrit: "Malasana", desc: "Deep squat, heels down if possible. Directly trains ankle dorsiflexion and calf flexibility -- the limiting factor for most people's squat depth." },
+      { name: "Standing calf stretch at wall", sanskrit: "No Sanskrit -- functional", desc: "Hands on wall, one foot back, heel pressed down. Targets the gastrocnemius. Directly improves ankle dorsiflexion." },
+    ]
+  },
+  "Full body release": {
+    desc: "A full body release session uses long, passive holds to systematically let go of accumulated tension from the week's training. The goal is parasympathetic activation -- the nervous system shifting from 'work' mode to 'recover' mode. This is where the physical adaptations from your training actually consolidate.",
+    poses: [
+      { name: "Legs up the wall", sanskrit: "Viparita Karani", desc: "Lie on your back, legs vertical against a wall. Reverses blood flow, calms the nervous system. Hold 5-10 min." },
+      { name: "Reclined butterfly", sanskrit: "Supta Baddha Konasana", desc: "On your back, soles of feet together, knees fall wide. Passive hip opener -- add a bolster under the spine for a chest opener too." },
+      { name: "Supine twist", sanskrit: "Supta Matsyendrasana", desc: "On your back, knees to one side. Hold 3 min each side. Releases the thoracic and lumbar spine." },
+      { name: "Savasana", sanskrit: "Savasana", desc: "Full relaxation pose. Don't skip it or rush it -- this is where integration happens. 5 min minimum." },
+    ]
+  },
+  "Long holds": {
+    desc: "Holding poses for 2-5 minutes rather than 30-60 seconds targets the fascia and connective tissue rather than just the muscles. Fascia responds slowly -- it needs sustained, moderate stress to remodel. Long holds also train mental stillness and breath awareness, which directly transfers to surfing composure.",
+    poses: [
+      { name: "Yin dragon", sanskrit: "Variation of Anjaneyasana", desc: "Low lunge, back knee down, held for 3-5 min. The fascia around the hip flexor needs this long to release." },
+      { name: "Yin sleeping swan", sanskrit: "Yin Kapotasana", desc: "Pigeon pose held passively for 3-5 min. Targets the deep hip rotators through sustained load." },
+      { name: "Yin shoelace", sanskrit: "Yin Gomukhasana", desc: "Legs stacked like crossed shoelaces, folded forward. Deep outer hip and glute stretch. Hold 3-4 min each side." },
+      { name: "Supported fish", sanskrit: "Matsyasana variation", desc: "Block under thoracic spine, arms wide. Completely passive chest and shoulder opener. Hold 3-5 min." },
+    ]
+  },
+  "Hip + hamstring": {
+    desc: "The hamstrings and hips are deeply connected -- the hamstrings attach to the sitting bones of the pelvis, so tight hamstrings tilt the pelvis and affect everything above and below. For surfing, hamstring flexibility improves forward bend, pop-up landing position and reduces lower back compression during paddling.",
+    poses: [
+      { name: "Seated forward fold", sanskrit: "Paschimottanasana", desc: "Legs extended, fold forward. Keep the spine long rather than rounding -- use a strap around the feet if needed." },
+      { name: "Pyramid pose", sanskrit: "Parsvottanasana", desc: "Standing, one foot forward, hinge over the front leg. Intense hamstring stretch with a hip flexor stretch on the back leg." },
+      { name: "Half splits", sanskrit: "Ardha Hanumanasana", desc: "From lunge, straighten the front leg, fold forward. The most targeted hamstring stretch -- excellent for surfers." },
+      { name: "Reclined hand to big toe", sanskrit: "Supta Padangusthasana", desc: "On your back, loop a strap around one foot and straighten the leg toward the ceiling. Hamstring stretch without lower back involvement." },
+    ]
+  },
+  "Breath work": {
+    desc: "Breath work (pranayama) on a recovery day serves two purposes: it activates the parasympathetic nervous system to accelerate recovery, and it trains the breath control that's directly useful in the water -- holding a breath through a hold-down, staying calm in big surf, conserving energy during a long paddle. Even 5-10 minutes makes a meaningful difference.",
+    poses: [
+      { name: "Box breathing", sanskrit: "No Sanskrit", desc: "Inhale 4 counts, hold 4, exhale 4, hold 4. Calms the nervous system rapidly. Used by athletes and special forces alike." },
+      { name: "Nadi Shodhana", sanskrit: "Nadi Shodhana Pranayama", desc: "Alternate nostril breathing. Balances the left and right hemispheres, deeply calming. 5-10 rounds." },
+      { name: "Extended exhale", sanskrit: "No Sanskrit", desc: "Inhale for 4 counts, exhale for 8. The longer exhale activates the vagus nerve and parasympathetic response. Simple and effective." },
+      { name: "Ujjayi breath", sanskrit: "Ujjayi Pranayama", desc: "Ocean breath -- slight constriction at the back of the throat creates a wave-like sound. Anchors attention to breath during yoga holds." },
+    ]
+  },
+  "Lower intensity than Tue/Thu": {
+    desc: "Sunday yoga is deliberately easier than Tuesday and Thursday. Where those sessions use your yoga practice as a strength and mobility tool, Sunday is pure recovery -- lower effort, more passive, longer holds, more floor work. The nervous system needs this contrast to adapt properly. Think of it as the difference between training and restoration.",
+    poses: [
+      { name: "Child's pose", sanskrit: "Balasana", desc: "The default resting pose -- return to it whenever you need a break. Hold for as long as you like." },
+      { name: "Reclined butterfly", sanskrit: "Supta Baddha Konasana", desc: "Passive hip opener on the floor. Add a bolster for more support. The definition of restorative yoga." },
+      { name: "Legs up the wall", sanskrit: "Viparita Karani", desc: "Passive inversion, zero effort. Deeply restorative for the legs and nervous system after a week of training." },
+      { name: "Savasana", sanskrit: "Savasana", desc: "End here, always. Minimum 5 minutes. Let everything integrate." },
+    ]
+  },
+};
+
+function openYogaSheet(term) {
+  const info = yogaInfo[term];
+  if (!info) return;
+  document.getElementById('sheetTitle').textContent = term;
+  document.getElementById('sheetDesc').textContent = info.desc;
+  document.getElementById('sheetPoses').innerHTML = info.poses.map(p => `
+    <div class="pose-card">
+      <div class="pose-name">${p.name} <span class="pose-sanskrit">${p.sanskrit}</span></div>
+      <div class="pose-desc">${p.desc}</div>
+    </div>
+  `).join('');
+  document.getElementById('sheetBackdrop').classList.add('visible');
+  document.getElementById('yogaSheet').classList.add('visible');
+}
+
+function closeSheet() {
+  document.getElementById('sheetBackdrop').classList.remove('visible');
+  document.getElementById('yogaSheet').classList.remove('visible');
 }
 
 // ---- INIT ----
