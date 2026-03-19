@@ -771,7 +771,18 @@ function renderSession() {
     html += `<div class="section-label">${section.heading}</div>`;
 
     if (section.yogaFoci) {
-      html += `<div class="ex-card"><div class="yoga-tags">` +
+      const yKey = 'yoga_' + section.heading.replace(/\s+/g, '_');
+      const yChecked = session.checks[yKey] || false;
+      html += `<div class="ex-card ${yChecked ? 'completed' : ''}">
+        <div class="ex-top" style="margin-bottom:10px;">
+          <button class="ex-check ${yChecked ? 'checked' : ''}" onclick="toggleCheck('${yKey}')">
+            <svg viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 6l3 3 5-5"/></svg>
+          </button>
+          <div class="ex-info">
+            <div class="ex-detail">Tap focuses below for pose ideas</div>
+          </div>
+        </div>
+        <div class="yoga-tags">` +
         section.yogaFoci.map(f => `<span class="yoga-tag" onclick="openYogaSheet('${f.replace(/'/g, "\\'")}')">${f} <span style="color:var(--muted);font-size:10px;">&#9432;</span></span>`).join('') +
         `</div></div>`;
     } else if (section.pullup) {
@@ -1138,7 +1149,7 @@ renderWeekStrip();
 renderSession();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/Fitness-App/sw.js').catch(() => {});
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
 </script>
 </body>
