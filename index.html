@@ -154,6 +154,7 @@ const pullupPhases = [
 ];
 
 const sunSal = { name: "Sun salutations", detail: "5 x Surya Namaskar A + 3-5 x Surya Namaskar B", sets: 1, info: "sunsal" };
+const goofboard = { name: "Goofboard", detail: "5 min -- single-leg balance, slow weight shifts, eyes open then closed", sets: 1, timer: 300 };
 const kneeRehab = [
   { name: "Terminal knee extension (TKE)", detail: "3 x 15 -- resistance band", sets: 3 },
   { name: "Wall sit", detail: "3 x 30-45 sec -- isometric quad loading", sets: 3, timer: 45 },
@@ -185,7 +186,7 @@ const days = [
   {
     label: "Mon", type: "Yoga + Strength", sub: "Sun sals, legs, core + knee rehab", pill: "pill-teal", duration: "75 min",
     sections: [
-      { heading: "Sun salutations", exercises: [sunSal] },
+      { heading: "Sun salutations", exercises: [sunSal, goofboard] },
       { heading: "Yoga - 25 min", yogaFoci: ["Hip flexors", "Glute activation", "Thoracic rotation", "Spinal extension", "Ankle + foot mobility"] },
       { heading: "Knee rehab", exercises: kneeRehab },
       { heading: "Legs + core", exercises: coreLegs },
@@ -196,7 +197,7 @@ const days = [
   {
     label: "Tue", type: "Paddle", sub: "Lake -- fish 5'6\"", pill: "pill-blue", duration: "45 min",
     sections: [
-      { heading: "Sun salutations", exercises: [sunSal] },
+      { heading: "Sun salutations", exercises: [sunSal, goofboard] },
       { heading: "Session", exercises: paddleSession },
     ],
     note: "Volume and stroke quality, not intensity. Clean catch angle, full extension."
@@ -205,13 +206,13 @@ const days = [
     label: "Wed", type: "Rest", sub: "Sun salutations only", pill: "pill-gray", duration: "15 min",
     rest: true,
     sections: [
-      { heading: "Sun salutations", exercises: [sunSal] },
+      { heading: "Sun salutations", exercises: [sunSal, goofboard] },
     ],
   },
   {
     label: "Thu", type: "Row + Strength", sub: "Sun sals, zone 2 + legs, core", pill: "pill-amber", duration: "75 min",
     sections: [
-      { heading: "Sun salutations", exercises: [sunSal] },
+      { heading: "Sun salutations", exercises: [sunSal, goofboard] },
       { heading: "Waterrower - 30 min", exercises: rowerSession },
       { heading: "Knee rehab", exercises: kneeRehab },
       { heading: "Legs + core", exercises: coreLegs },
@@ -222,7 +223,7 @@ const days = [
   {
     label: "Fri", type: "Paddle", sub: "Lake -- fish 5'6\"", pill: "pill-blue", duration: "45 min",
     sections: [
-      { heading: "Sun salutations", exercises: [sunSal] },
+      { heading: "Sun salutations", exercises: [sunSal, goofboard] },
       { heading: "Session", exercises: paddleSession },
     ],
     note: "Second paddle of the week. If legs are heavy from Thursday, focus on stroke efficiency."
@@ -230,7 +231,7 @@ const days = [
   {
     label: "Sat", type: "Row + Yoga", sub: "Sun sals, zone 2 + recovery yoga", pill: "pill-purple", duration: "75 min",
     sections: [
-      { heading: "Sun salutations", exercises: [sunSal] },
+      { heading: "Sun salutations", exercises: [sunSal, goofboard] },
       { heading: "Waterrower - 30 min", exercises: rowerSession },
       { heading: "Yoga - 35 min", yogaFoci: ["Full body release", "Hip + hamstring", "Chest + pec stretch", "Shoulder opening", "Long holds"] },
     ],
@@ -240,7 +241,7 @@ const days = [
     label: "Sun", type: "Rest", sub: "Sun salutations only", pill: "pill-gray", duration: "15 min",
     rest: true,
     sections: [
-      { heading: "Sun salutations", exercises: [sunSal] },
+      { heading: "Sun salutations", exercises: [sunSal, goofboard] },
     ],
   },
 ];
