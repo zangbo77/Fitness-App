@@ -11,521 +11,97 @@
 <title>Boris Fitness</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
-
   :root {
-    --bg: #0a0a0a;
-    --surface: #141414;
-    --surface2: #1e1e1e;
-    --border: #2a2a2a;
-    --text: #f0ede8;
-    --muted: #666;
-    --teal: #1D9E75;
-    --teal-light: #E1F5EE;
-    --teal-dim: #0a2e22;
-    --amber: #BA7517;
-    --amber-light: #FAEEDA;
-    --amber-dim: #2a1e00;
-    --coral: #993C1D;
-    --coral-light: #FAECE7;
-    --coral-dim: #2a1008;
-    --purple: #534AB7;
-    --purple-light: #EEEDFE;
-    --purple-dim: #16143a;
-    --blue: #185FA5;
-    --blue-light: #E6F1FB;
-    --blue-dim: #081829;
-    --red: #e24b4a;
-    --green: #1D9E75;
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+    --border: #2a2a2a; --text: #f0ede8; --muted: #666;
+    --teal: #1D9E75; --teal-dim: #0a2e22;
+    --amber-dim: #2a1e00; --coral-dim: #2a1008;
+    --purple-dim: #16143a; --blue-dim: #081829;
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    min-height: 100dvh;
-    overflow-x: hidden;
-    padding-bottom: calc(80px + var(--safe-bottom));
-  }
-
-  /* NAV */
-  .top-bar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    padding: calc(var(--safe-top) + 12px) 20px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .top-bar h1 {
-    font-family: 'DM Mono', monospace;
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .top-bar .date-str {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  /* BOTTOM NAV */
-  .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0; right: 0;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex;
-    padding-bottom: var(--safe-bottom);
-    z-index: 100;
-  }
-  .nav-btn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    padding: 10px 0;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
-    cursor: pointer;
-    transition: color .15s;
-  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100dvh; overflow-x: hidden; padding-bottom: calc(80px + var(--safe-bottom)); }
+  .top-bar { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); padding: calc(var(--safe-top) + 12px) 20px 12px; display: flex; align-items: center; justify-content: space-between; }
+  .top-bar h1 { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .date-str { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; padding-bottom: var(--safe-bottom); z-index: 100; }
+  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 0; background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 10px; cursor: pointer; transition: color .15s; }
   .nav-btn.active { color: var(--text); }
   .nav-btn svg { width: 20px; height: 20px; }
-
-  /* SCREENS */
   .screen { display: none; padding: 16px 16px 0; }
   .screen.active { display: block; }
-
-  /* WEEK STRIP */
-  .week-strip {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-    margin-bottom: 20px;
-  }
-  .day-chip {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 8px 4px;
-    text-align: center;
-    cursor: pointer;
-    transition: all .15s;
-  }
-  .day-chip.active {
-    border-color: var(--text);
-    background: var(--surface2);
-  }
+  .week-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 20px; }
+  .day-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 4px; text-align: center; cursor: pointer; transition: all .15s; }
+  .day-chip.active { border-color: var(--text); background: var(--surface2); }
   .day-chip.done { border-color: var(--teal); }
-  .day-chip .chip-label {
-    font-size: 9px;
-    font-weight: 500;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    display: block;
-    margin-bottom: 3px;
-  }
-  .day-chip .chip-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: transparent;
-    margin: 0 auto;
-    transition: background .15s;
-  }
+  .day-chip.rest-day { opacity: .45; }
+  .chip-label { font-size: 9px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; display: block; margin-bottom: 3px; }
+  .chip-dot { width: 5px; height: 5px; border-radius: 50%; background: transparent; margin: 0 auto; transition: background .15s; }
   .day-chip.done .chip-dot { background: var(--teal); }
   .day-chip.active .chip-dot { background: var(--text); }
-
-  /* SESSION HEADER */
-  .session-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-  .session-header h2 {
-    font-size: 20px;
-    font-weight: 500;
-    flex: 1;
-  }
-  .pill {
-    border-radius: 20px;
-    padding: 3px 10px;
-    font-size: 11px;
-    font-weight: 500;
-    white-space: nowrap;
-  }
+  .session-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .session-header h2 { font-size: 20px; font-weight: 500; flex: 1; }
+  .pill { border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 500; white-space: nowrap; }
   .pill-teal { background: var(--teal-dim); color: #5DCAA5; }
   .pill-purple { background: var(--purple-dim); color: #AFA9EC; }
   .pill-amber { background: var(--amber-dim); color: #FAC775; }
   .pill-coral { background: var(--coral-dim); color: #F0997B; }
   .pill-blue { background: var(--blue-dim); color: #85B7EB; }
+  .pill-gray { background: #1a1a1a; color: var(--muted); }
   .session-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; margin-top: -12px; }
-
-  /* SECTION */
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 10px;
-    margin-top: 20px;
-  }
-  .section-label:first-of-type { margin-top: 0; }
-
-  /* EXERCISE CARD */
-  .ex-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
-    margin-bottom: 8px;
-    transition: border-color .15s;
-  }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; margin-top: 20px; }
+  .ex-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 8px; transition: border-color .15s; }
   .ex-card.completed { border-color: var(--teal); background: #0a1f18; }
-  .ex-card.pullup-card { background: var(--surface2); }
-
-  .ex-top {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .ex-check {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border);
-    background: none;
-    cursor: pointer;
-    flex-shrink: 0;
-    margin-top: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .15s;
-  }
-  .ex-check.checked {
-    background: var(--teal);
-    border-color: var(--teal);
-  }
+  .ex-top { display: flex; align-items: flex-start; gap: 12px; }
+  .ex-check { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--border); background: none; cursor: pointer; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+  .ex-check.checked { background: var(--teal); border-color: var(--teal); }
   .ex-check svg { width: 12px; height: 12px; opacity: 0; transition: opacity .15s; }
   .ex-check.checked svg { opacity: 1; }
-
   .ex-info { flex: 1; }
-  .ex-name {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 2px;
-  }
-  .ex-detail {
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-
-  /* SET TRACKER */
-  .set-tracker {
-    display: flex;
-    gap: 6px;
-    margin-top: 12px;
-    flex-wrap: wrap;
-  }
-  .set-btn {
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    border: 1.5px solid var(--border);
-    background: none;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all .15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .set-btn.done {
-    background: var(--teal-dim);
-    border-color: var(--teal);
-    color: #5DCAA5;
-  }
-
-  /* TIMER */
-  .timer-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 12px;
-  }
-  .timer-display {
-    font-family: 'DM Mono', monospace;
-    font-size: 24px;
-    font-weight: 500;
-    min-width: 70px;
-  }
-  .timer-display.running { color: var(--teal); }
-  .timer-display.done-color { color: var(--muted); }
-  .timer-ctrl {
-    display: flex;
-    gap: 6px;
-  }
-  .timer-btn {
-    padding: 6px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all .15s;
-  }
-  .timer-btn.primary {
-    background: var(--teal-dim);
-    border-color: var(--teal);
-    color: #5DCAA5;
-  }
-
-  /* YOGA TAGS */
+  .ex-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .ex-detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .set-tracker { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+  .set-btn { width: 36px; height: 36px; border-radius: 8px; border: 1.5px solid var(--border); background: none; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center; }
+  .set-btn.done { background: var(--teal-dim); border-color: var(--teal); color: #5DCAA5; }
+  .timer-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+  .timer-display { font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 500; min-width: 70px; }
+  .timer-btn { padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; }
+  .timer-btn.primary { background: var(--teal-dim); border-color: var(--teal); color: #5DCAA5; }
   .yoga-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .yoga-tag {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  /* PULLUP PHASES */
-  .phase-box {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 8px;
-  }
+  .yoga-tag { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: var(--muted); cursor: pointer; transition: border-color .15s; }
+  .phase-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
   .phase-label { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
   .phase-detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
-
-  /* NOTE */
-  .session-note {
-    background: var(--surface);
-    border-left: 2px solid var(--border);
-    border-radius: 0 8px 8px 0;
-    padding: 12px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-
-  /* COMPLETE BTN */
-  .complete-btn {
-    width: 100%;
-    padding: 16px;
-    border-radius: 14px;
-    border: none;
-    background: var(--teal);
-    color: #fff;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    margin-bottom: 24px;
-    transition: opacity .15s;
-  }
-  .complete-btn:active { opacity: .8; }
-  .complete-btn.completed-state {
-    background: var(--teal-dim);
-    color: #5DCAA5;
-    border: 1px solid var(--teal);
-  }
-
-  /* HISTORY SCREEN */
-  .history-empty {
-    text-align: center;
-    color: var(--muted);
-    padding: 60px 20px;
-    font-size: 14px;
-    line-height: 1.7;
-  }
-  .history-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
-    margin-bottom: 10px;
-  }
+  .session-note { background: var(--surface); border-left: 2px solid var(--border); border-radius: 0 8px 8px 0; padding: 12px; margin-top: 20px; margin-bottom: 20px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .complete-btn { width: 100%; padding: 16px; border-radius: 14px; border: none; background: var(--teal); color: #fff; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; margin-bottom: 24px; }
+  .complete-btn.completed-state { background: var(--teal-dim); color: #5DCAA5; border: 1px solid var(--teal); }
+  .history-empty { text-align: center; color: var(--muted); padding: 60px 20px; font-size: 14px; line-height: 1.7; }
+  .history-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
   .history-card.completed-hist { border-color: var(--teal); }
-  .history-date {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
-  .history-name {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
-  .history-progress {
-    font-size: 12px;
-    color: var(--muted);
-  }
-  .history-bar {
-    height: 3px;
-    background: var(--border);
-    border-radius: 2px;
-    margin-top: 8px;
-    overflow: hidden;
-  }
-  .history-fill {
-    height: 100%;
-    background: var(--teal);
-    border-radius: 2px;
-    transition: width .3s;
-  }
-
-  /* REST DAY */
-  .rest-day {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--muted);
-  }
-  .rest-day .rest-icon { font-size: 48px; margin-bottom: 16px; }
-  .rest-day h3 { font-size: 18px; color: var(--text); margin-bottom: 8px; }
-  .rest-day p { font-size: 14px; line-height: 1.6; }
-
-  /* YOGA INFO SHEET */
-  .sheet-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.6);
-    z-index: 200;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .25s;
-  }
-  .sheet-backdrop.visible {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .sheet {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: var(--surface);
-    border-radius: 20px 20px 0 0;
-    border-top: 1px solid var(--border);
-    padding: 0 20px calc(32px + var(--safe-bottom));
-    z-index: 201;
-    transform: translateY(100%);
-    transition: transform .3s cubic-bezier(.32,.72,0,1);
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-  .sheet.visible { transform: translateY(0); }
-  .sheet-handle {
-    width: 36px; height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    margin: 12px auto 20px;
-  }
-  .sheet-title {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 8px;
-  }
-  .sheet-desc {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 20px;
-  }
-  .sheet-poses-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
-  .pose-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 8px;
-  }
-  .pose-name {
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 3px;
-  }
-  .pose-name .pose-sanskrit {
-    font-weight: 400;
-    color: var(--muted);
-    font-size: 12px;
-  }
-  .pose-desc {
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-  .yoga-tag {
-    cursor: pointer;
-    transition: border-color .15s, color .15s;
-  }
-  .yoga-tag:active { border-color: var(--purple); color: #AFA9EC; }
-
-  /* GLOBAL TIMER OVERLAY */
-  .global-timer {
-    position: fixed;
-    bottom: calc(80px + var(--safe-bottom));
-    left: 16px; right: 16px;
-    background: var(--surface2);
-    border: 1px solid var(--teal);
-    border-radius: 14px;
-    padding: 12px 16px;
-    display: none;
-    align-items: center;
-    gap: 12px;
-    z-index: 50;
-  }
+  .history-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .history-progress { font-size: 12px; color: var(--muted); }
+  .history-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .history-fill { height: 100%; background: var(--teal); border-radius: 2px; }
+  .global-timer { position: fixed; bottom: calc(80px + var(--safe-bottom)); left: 16px; right: 16px; background: var(--surface2); border: 1px solid var(--teal); border-radius: 14px; padding: 12px 16px; display: none; align-items: center; gap: 12px; z-index: 50; }
   .global-timer.visible { display: flex; }
   .global-timer-label { font-size: 12px; color: var(--muted); flex: 1; }
-  .global-timer-time {
-    font-family: 'DM Mono', monospace;
-    font-size: 20px;
-    color: var(--teal);
-    font-weight: 500;
-  }
-  .global-timer-stop {
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--muted);
-    padding: 4px 10px;
-    font-size: 12px;
-    cursor: pointer;
-  }
+  .global-timer-time { font-family: 'DM Mono', monospace; font-size: 20px; color: var(--teal); font-weight: 500; }
+  .global-timer-stop { background: none; border: 1px solid var(--border); border-radius: 8px; color: var(--muted); padding: 4px 10px; font-size: 12px; cursor: pointer; }
+  .sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 200; opacity: 0; pointer-events: none; transition: opacity .25s; }
+  .sheet-backdrop.visible { opacity: 1; pointer-events: all; }
+  .sheet { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-radius: 20px 20px 0 0; border-top: 1px solid var(--border); padding: 0 20px calc(32px + var(--safe-bottom)); z-index: 201; transform: translateY(100%); transition: transform .3s cubic-bezier(.32,.72,0,1); max-height: 80vh; overflow-y: auto; }
+  .sheet.visible { transform: translateY(0); }
+  .sheet-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 12px auto 20px; }
+  .sheet-title { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+  .sheet-desc { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+  .sheet-poses-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .pose-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+  .pose-name { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+  .pose-sanskrit { font-weight: 400; color: var(--muted); font-size: 12px; }
+  .pose-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .yt-link { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); text-decoration: none; border: 1px solid var(--border); border-radius: 6px; padding: 4px 9px; background: var(--surface2); margin-top: 10px; }
+  .info-link { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 4px 9px; background: var(--surface2); margin-top: 10px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -545,12 +121,11 @@
 </div>
 
 <div class="global-timer" id="globalTimer">
-  <span class="global-timer-label" id="globalTimerLabel">Rest timer</span>
+  <span class="global-timer-label">Timer</span>
   <span class="global-timer-time" id="globalTimerTime">0:00</span>
   <button class="global-timer-stop" onclick="stopGlobalTimer()">Stop</button>
 </div>
 
-<!-- YOGA INFO SHEET -->
 <div class="sheet-backdrop" id="sheetBackdrop" onclick="closeSheet()"></div>
 <div class="sheet" id="yogaSheet">
   <div class="sheet-handle"></div>
@@ -562,578 +137,345 @@
 
 <nav class="bottom-nav">
   <button class="nav-btn active" id="nav-workout" onclick="showScreen('workout')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-      <rect x="3" y="3" width="18" height="18" rx="3"/>
-      <path d="M9 12l2 2 4-4"/>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg>
     Today
   </button>
   <button class="nav-btn" id="nav-history" onclick="showScreen('history')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-      <path d="M12 8v4l3 3"/>
-      <circle cx="12" cy="12" r="9"/>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
     History
   </button>
 </nav>
 
 <script>
-// ---- DATA ----
 const pullupPhases = [
-  { label: "Weeks 1-3", detail: "3 sets of max clean reps (~3) + 3 negatives after each set. Negatives: jump to top, lower in 4-5 sec." },
-  { label: "Weeks 4-6", detail: "3 sets max reps + 2 negatives. Add a 20-30 sec dead hang. Target: 5 reps per set." },
-  { label: "Week 7+", detail: "Reassess -- likely 5-7 reps. Introduce 4 x 5 with full rest, drop the negatives." },
+  { label: "Weeks 1-3", detail: "3 sets of max clean reps (~3) + 3 negatives. Jump to top, lower in 4-5 sec." },
+  { label: "Weeks 4-6", detail: "3 sets max reps + 2 negatives. Add 20-30 sec dead hang. Target: 5 reps." },
+  { label: "Week 7+", detail: "Reassess -- likely 5-7 reps. Introduce 4 x 5 with full rest, drop negatives." },
+];
+
+const sunSal = { name: "Sun salutations", detail: "5 x Surya Namaskar A + 3-5 x Surya Namaskar B", sets: 1, info: "sunsal" };
+const kneeRehab = [
+  { name: "Terminal knee extension (TKE)", detail: "3 x 15 -- resistance band", sets: 3 },
+  { name: "Wall sit", detail: "3 x 30-45 sec -- isometric quad loading", sets: 3, timer: 45 },
+];
+const coreLegs = [
+  { name: "Goblet squat", detail: "4 x 8 -- progressive depth each set", sets: 4 },
+  { name: "Single-leg deadlift", detail: "3 x 8 each -- dumbbells, balance + posterior chain", sets: 3 },
+  { name: "Step-up", detail: "3 x 10 each leg -- controlled descent, no knee cave", sets: 3 },
+  { name: "Single-leg calf raise", detail: "3 x 12 each -- slow eccentric", sets: 3 },
+  { name: "Side plank + hip raise", detail: "3 x 10 each side -- lateral stability", sets: 3, timer: 30 },
+  { name: "Dead bug", detail: "3 x 8 each side -- deep core, spinal stability", sets: 3 },
+  { name: "Wave-Ki take-off", detail: "3-5 x 7-15 -- build volume as fitness returns", sets: 4 },
+];
+const cooldown = [
+  { name: "Deep squat hold (assisted)", detail: "3 x 45 sec -- doorframe or dumbbell", sets: 3, timer: 45 },
+  { name: "Kneeling stretch progression", detail: "Add 5-10 sec each week", sets: 1, timer: 30 },
+];
+const paddleSession = [
+  { name: "Warm-up paddle", detail: "5 min -- let shoulders open up", sets: 1, timer: 300 },
+  { name: "Continuous paddle", detail: "30 min -- moderate effort, ~1.7km", sets: 1, timer: 1800 },
+  { name: "Cool-down + stretch", detail: "5 min easy, shoulder stretch on shore", sets: 1, timer: 300 },
+];
+const rowerSession = [
+  { name: "Zone 2 steady state", detail: "25 min at 65-70% max HR -- hold a conversation", sets: 1, timer: 1500 },
+  { name: "Cool-down row", detail: "5 min easy, drop rate", sets: 1, timer: 300 },
 ];
 
 const days = [
   {
-    label: "Mon", type: "Strength", sub: "Lower body + knees", pill: "pill-teal", duration: "60 min",
+    label: "Mon", type: "Yoga + Strength", sub: "Sun sals, legs, core + knee rehab", pill: "pill-teal", duration: "75 min",
     sections: [
-      { heading: "Warm-up", exercises: [
-        { name: "Goofboard - single-leg balance", detail: "3 x 2 min, slow weight shifts", sets: 3 },
-        { name: "Hip circles + leg swings", detail: "2 x 10 each direction", sets: 2 },
-        { name: "Bodyweight squat (shallow)", detail: "2 x 10, comfortable depth only", sets: 2 },
-      ]},
-      { heading: "Main", exercises: [
-        { name: "Goblet squat", detail: "4 x 8 -- progressive depth each set", sets: 4 },
-        { name: "Romanian deadlift", detail: "3 x 10 -- hip hinge focus", sets: 3 },
-        { name: "Step-up", detail: "3 x 10 each leg -- controlled descent", sets: 3 },
-        { name: "Terminal knee extension (TKE)", detail: "3 x 15 -- resistance band", sets: 3, timer: 30 },
-        { name: "Wall sit", detail: "3 x 30-45 sec -- isometric quad loading", sets: 3, timer: 45 },
-        { name: "Single-leg calf raise", detail: "3 x 12 each -- slow eccentric", sets: 3 },
-      ]},
-      { heading: "Cool-down", exercises: [
-        { name: "Supine knee hugs + figure-4", detail: "", sets: 1, timer: 60 },
-        { name: "Prone quad stretch", detail: "", sets: 1, timer: 45 },
-        { name: "Seated hamstring stretch", detail: "", sets: 1, timer: 45 },
-      ]},
+      { heading: "Sun salutations", exercises: [sunSal] },
+      { heading: "Yoga - 25 min", yogaFoci: ["Hip flexors", "Glute activation", "Thoracic rotation", "Spinal extension", "Ankle + foot mobility"] },
+      { heading: "Knee rehab", exercises: kneeRehab },
+      { heading: "Legs + core", exercises: coreLegs },
+      { heading: "Cool-down", exercises: cooldown },
     ],
-    note: "TKE and wall sit are non-negotiable knee rehab -- never skip them. Squat depth: only as deep as pain-free."
+    note: "TKE and wall sit are non-negotiable -- never skip them. Single-leg deadlift is your best surf-prep exercise."
   },
   {
-    label: "Tue", type: "Yoga + DB", sub: "Hips, glutes + knee rehab", pill: "pill-purple", duration: "60 min",
+    label: "Tue", type: "Paddle", sub: "Lake -- fish 5'6\"", pill: "pill-blue", duration: "45 min",
     sections: [
-      { heading: "Yoga - 35 min", yogaFoci: ["Hip flexors", "Glute activation", "Pigeon / figure-4 holds", "Low lunge progression", "Gentle knee flexion"] },
-      { heading: "Dumbbell + band", exercises: [
-        { name: "Clamshell with band", detail: "3 x 15 -- glute med isolation", sets: 3 },
-        { name: "Lateral band walk", detail: "3 x 12 each direction -- hip abductors", sets: 3 },
-        { name: "Reverse nordic curl (assisted)", detail: "3 x 8 -- cushion under knees", sets: 3 },
-        { name: "Single-leg glute bridge", detail: "3 x 12 each -- low knee load", sets: 3 },
-      ]},
+      { heading: "Sun salutations", exercises: [sunSal] },
+      { heading: "Session", exercises: paddleSession },
     ],
-    note: "Clamshell and lateral walk target glute med -- big impact on knee tracking. Start reverse nordic with very short range."
+    note: "Volume and stroke quality, not intensity. Clean catch angle, full extension."
   },
   {
-    label: "Wed", type: "Row + Upper", sub: "Cardio, paddle + pull-ups", pill: "pill-amber", duration: "60 min",
+    label: "Wed", type: "Rest", sub: "Sun salutations only", pill: "pill-gray", duration: "15 min",
+    rest: true,
     sections: [
-      { heading: "Waterrower", exercises: [
-        { name: "Zone 2 steady state", detail: "25 min at 65-70% max HR", sets: 1, timer: 1500 },
-        { name: "Cool-down row", detail: "5 min easy, drop rate", sets: 1, timer: 300 },
-      ]},
-      { heading: "Pull-up progression", pullup: true },
-      { heading: "Dumbbell upper body", exercises: [
-        { name: "Single-arm dumbbell row", detail: "3 x 10 each -- paddle pull pattern", sets: 3 },
-        { name: "Prone Y-T-W raises", detail: "2 x 10 each -- rotator cuff + posture", sets: 2 },
-        { name: "Wave-Ki take-off", detail: "3 x 7 -- controlled, deconstructed pop-up", sets: 3 },
-        { name: "Dumbbell overhead press", detail: "3 x 10", sets: 3 },
-      ]},
-      { heading: "Cool-down", exercises: [
-        { name: "Shoulder cross-body + chest stretch", detail: "", sets: 1, timer: 60 },
-      ]},
+      { heading: "Sun salutations", exercises: [sunSal] },
     ],
-    note: "Heart rate monitor on -- keep zone 2 honest. Y-T-W: light weight, full range, no shrugging."
   },
   {
-    label: "Thu", type: "Yoga + DB", sub: "Thoracic, shoulders + core", pill: "pill-purple", duration: "60 min",
+    label: "Thu", type: "Row + Strength", sub: "Sun sals, zone 2 + legs, core", pill: "pill-amber", duration: "75 min",
     sections: [
-      { heading: "Yoga - 35 min", yogaFoci: ["Thoracic rotation", "Shoulder opening", "Chest + pec stretch", "Spinal extension", "Ankle + foot mobility"] },
-      { heading: "Dumbbell", exercises: [
-        { name: "Face pull (band)", detail: "3 x 15 -- rear delt + external rotation", sets: 3 },
-        { name: "Dumbbell external rotation", detail: "3 x 12 each -- rotator cuff health", sets: 3 },
-        { name: "Plank with shoulder tap", detail: "3 x 10 each side -- anti-rotation core", sets: 3, timer: 45 },
-        { name: "Dead bug", detail: "3 x 8 each side -- deep core, spinal stability", sets: 3 },
-      ]},
+      { heading: "Sun salutations", exercises: [sunSal] },
+      { heading: "Waterrower - 30 min", exercises: rowerSession },
+      { heading: "Knee rehab", exercises: kneeRehab },
+      { heading: "Legs + core", exercises: coreLegs },
+      { heading: "Cool-down", exercises: cooldown },
     ],
-    note: "Precision over load. Shoulder health and deep core. Dead bug looks easy, is not."
+    note: "Heart rate monitor on for the row. Thursday is your heaviest day -- pace accordingly."
   },
   {
-    label: "Fri", type: "Strength", sub: "Full body + surf prep", pill: "pill-coral", duration: "60 min",
+    label: "Fri", type: "Paddle", sub: "Lake -- fish 5'6\"", pill: "pill-blue", duration: "45 min",
     sections: [
-      { heading: "Warm-up", exercises: [
-        { name: "Goofboard - dynamic", detail: "3 x 2 min: cross-step, nose/tail shifts", sets: 3 },
-        { name: "World's greatest stretch", detail: "5 each side", sets: 1 },
-      ]},
-      { heading: "Pull-up progression", pullup: true },
-      { heading: "Main", exercises: [
-        { name: "Dumbbell split squat", detail: "3 x 8 each -- rear foot elevated if tolerated", sets: 3 },
-        { name: "Dumbbell deadlift", detail: "4 x 8 -- hip/glute/hamstring", sets: 4 },
-        { name: "Single-leg deadlift", detail: "3 x 8 each -- balance + posterior chain", sets: 3 },
-        { name: "Dumbbell bent-over row", detail: "3 x 10 -- heavier than Wednesday", sets: 3 },
-        { name: "Wave-Ki take-off", detail: "3-5 x 7-15 -- build volume as fitness returns", sets: 4 },
-        { name: "Side plank + hip raise", detail: "3 x 10 each side -- lateral stability", sets: 3, timer: 30 },
-      ]},
-      { heading: "Cool-down", exercises: [
-        { name: "Deep squat hold (assisted)", detail: "3 x 45 sec -- doorframe or dumbbell", sets: 3, timer: 45 },
-        { name: "Kneeling stretch progression", detail: "Add 5-10 sec each week", sets: 3, timer: 30 },
-      ]},
+      { heading: "Sun salutations", exercises: [sunSal] },
+      { heading: "Session", exercises: paddleSession },
     ],
-    note: "Single-leg deadlift is your best surf-prep exercise. Deep squat and kneeling: don't force range, just show up every Friday."
+    note: "Second paddle of the week. If legs are heavy from Thursday, focus on stroke efficiency."
   },
   {
-    label: "Sat", type: "Paddle", sub: "Lake -- fish 5'6\"", pill: "pill-blue", duration: "45 min",
+    label: "Sat", type: "Row + Yoga", sub: "Sun sals, zone 2 + recovery yoga", pill: "pill-purple", duration: "75 min",
     sections: [
-      { heading: "Session", exercises: [
-        { name: "Warm-up paddle", detail: "5 min -- let shoulders open up", sets: 1, timer: 300 },
-        { name: "Continuous paddle", detail: "30 min -- moderate effort, ~1.7km", sets: 1, timer: 1800 },
-        { name: "Cool-down + stretch", detail: "5 min easy, stretch on shore", sets: 1, timer: 300 },
-      ]},
+      { heading: "Sun salutations", exercises: [sunSal] },
+      { heading: "Waterrower - 30 min", exercises: rowerSession },
+      { heading: "Yoga - 35 min", yogaFoci: ["Full body release", "Hip + hamstring", "Chest + pec stretch", "Shoulder opening", "Long holds"] },
     ],
-    note: "Volume and stroke quality, not intensity. Clean catch angle, full extension. Translates directly to paddling out through whitewash."
+    note: "Saturday closes the active week. The yoga here is slower and more restorative -- long holds, let the week unwind."
   },
   {
-    label: "Sun", type: "Yoga", sub: "Full body recovery", pill: "pill-purple", duration: "40 min",
+    label: "Sun", type: "Rest", sub: "Sun salutations only", pill: "pill-gray", duration: "15 min",
+    rest: true,
     sections: [
-      { heading: "Yoga - 40 min", yogaFoci: ["Full body release", "Long holds", "Hip + hamstring", "Breath work", "Lower intensity than Tue/Thu"] },
+      { heading: "Sun salutations", exercises: [sunSal] },
     ],
-    note: "Lowest intensity day. Longer holds, slower transitions, more floor work. This is the recovery that makes Monday possible."
   },
 ];
 
-// ---- STATE ----
+const yogaInfo = {
+  "sunsal": {
+    desc: "Sun Salutation A is the foundation -- a dynamic sequence linking breath to movement that warms the spine, opens the hips and shoulders. Sun Salutation B adds Warrior I and Chair pose, increasing the leg load and intensity. 5A + 3-5B is a meaningful warm-up and on rest days keeps the body moving without significant load.",
+    poses: [
+      { name: "Sun Salutation A", sanskrit: "Surya Namaskar A", desc: "Mountain - arms up - forward fold - halfway lift - plank - chaturanga - updog - downdog. 5 rounds." },
+      { name: "Sun Salutation B", sanskrit: "Surya Namaskar B", desc: "Adds Chair pose at the start and Warrior I on each side. More demanding -- 3-5 rounds." },
+    ]
+  },
+  "Hip flexors": {
+    desc: "The hip flexors -- primarily the iliopsoas -- lift the knee toward the chest. Surfers and desk workers tend to have chronically tight hip flexors, which pulls the pelvis forward and compresses the lower back. Lengthening these muscles improves paddling posture, pop-up mechanics and knee tracking.",
+    poses: [
+      { name: "Low lunge", sanskrit: "Anjaneyasana", desc: "Back knee down, front foot between hands. Sink hips forward and down. Hold 90 sec each side." },
+      { name: "Crescent lunge", sanskrit: "Ashta Chandrasana", desc: "Same as low lunge but back knee lifted. Adds quad stretch and balance." },
+      { name: "Lizard pose", sanskrit: "Utthan Pristhasana", desc: "Front foot outside the same-side hand. Deep hip flexor and groin stretch." },
+    ]
+  },
+  "Glute activation": {
+    desc: "Inactive glutes shift load to the knees and lower back. These movements wake up the glute med and glute max before heavier work.",
+    poses: [
+      { name: "Bridge pose", sanskrit: "Setu Bandha Sarvangasana", desc: "Lying on back, feet flat, press hips up. Squeeze glutes at the top." },
+      { name: "Warrior III", sanskrit: "Virabhadrasana III", desc: "Standing on one leg, hinge forward. Strong glute activation for the standing leg." },
+      { name: "Chair pose", sanskrit: "Utkatasana", desc: "Feet hip-width, sit back. Fires glutes and quads simultaneously." },
+    ]
+  },
+  "Thoracic rotation": {
+    desc: "The thoracic spine is designed to rotate, but paddling and desk work lock it up. For surfing, free thoracic rotation is essential for reading waves, trimming and turning.",
+    poses: [
+      { name: "Seated spinal twist", sanskrit: "Ardha Matsyendrasana", desc: "Seated, one leg extended, other crosses over. Twist toward the bent knee." },
+      { name: "Supine twist", sanskrit: "Supta Matsyendrasana", desc: "On your back, knees fall to one side while arms open wide." },
+      { name: "Thread the needle", sanskrit: "Parsva Balasana", desc: "On hands and knees, thread one arm under the body. Deep thoracic rotation." },
+    ]
+  },
+  "Spinal extension": {
+    desc: "Spinal extension counteracts the flexed-forward posture of surfing and paddling. It decompresses the discs, opens the front body and directly trains the pop-up position.",
+    poses: [
+      { name: "Cobra", sanskrit: "Bhujangasana", desc: "Prone, hands under shoulders, lift chest. Directly mimics the pop-up." },
+      { name: "Upward facing dog", sanskrit: "Urdhva Mukha Svanasana", desc: "Like cobra but arms fully extended and thighs off the floor." },
+      { name: "Bridge", sanskrit: "Setu Bandha Sarvangasana", desc: "Supine backbend -- gentler on the lumbar spine than floor backbends." },
+    ]
+  },
+  "Ankle + foot mobility": {
+    desc: "Ankle dorsiflexion limits squat depth, surf stance and knee tracking. Restricted ankles force the knee to collapse inward or the heel to rise.",
+    poses: [
+      { name: "Toes pose", sanskrit: "Prapadasana", desc: "Kneel sitting on heels with toes tucked under. Intense plantar fascia stretch. Hold 1-2 min." },
+      { name: "Squat pose", sanskrit: "Malasana", desc: "Deep squat, heels down if possible. Trains ankle dorsiflexion directly." },
+      { name: "Calf stretch at wall", sanskrit: "Functional", desc: "Hands on wall, one foot back, heel pressed down." },
+    ]
+  },
+  "Full body release": {
+    desc: "Long, passive holds to systematically release accumulated tension. The goal is parasympathetic activation -- the nervous system shifting from work mode to recovery mode.",
+    poses: [
+      { name: "Legs up the wall", sanskrit: "Viparita Karani", desc: "Legs vertical against a wall. Reverses blood flow, calms the nervous system. Hold 5-10 min." },
+      { name: "Reclined butterfly", sanskrit: "Supta Baddha Konasana", desc: "On back, soles of feet together, knees fall wide. Passive hip opener." },
+      { name: "Savasana", sanskrit: "Savasana", desc: "Full relaxation. 5 min minimum -- this is where integration happens." },
+    ]
+  },
+  "Hip + hamstring": {
+    desc: "Tight hamstrings tilt the pelvis and affect everything above and below. For surfing, flexibility here improves forward bend, pop-up landing and reduces lower back compression during paddling.",
+    poses: [
+      { name: "Seated forward fold", sanskrit: "Paschimottanasana", desc: "Legs extended, fold forward. Keep spine long -- use a strap if needed." },
+      { name: "Half splits", sanskrit: "Ardha Hanumanasana", desc: "From lunge, straighten the front leg. Most targeted hamstring stretch." },
+      { name: "Reclined hand to big toe", sanskrit: "Supta Padangusthasana", desc: "On back, strap around one foot, straighten leg. No lower back involvement." },
+    ]
+  },
+  "Chest + pec stretch": {
+    desc: "The pecs get chronically shortened by paddling and rowing, internally rotating the shoulder and contributing to rounded-shoulder posture common in surfers.",
+    poses: [
+      { name: "Fish pose", sanskrit: "Matsyasana", desc: "On back, arch upper back, chest opens to ceiling. Hold 1-2 min." },
+      { name: "Supported fish", sanskrit: "Matsyasana variation", desc: "Block under thoracic spine. Fully passive chest and shoulder opener." },
+      { name: "Camel pose", sanskrit: "Ustrasana", desc: "Kneeling, hands to heels, chest lifts. Strong active chest opener." },
+    ]
+  },
+  "Shoulder opening": {
+    desc: "Paddling and rowing shorten the anterior shoulder over time, pulling it forward. Shoulder opening lengthens the pec minor, anterior deltoid and biceps tendon.",
+    poses: [
+      { name: "Cow face arms", sanskrit: "Gomukhasana arms", desc: "One arm up bending behind head, other reaches up behind back. Deep opener for both sides." },
+      { name: "Puppy pose", sanskrit: "Uttana Shishosana", desc: "On hands and knees, walk hands forward, lower chest to floor. Opens shoulder girdle and thoracic spine." },
+      { name: "Eagle arms", sanskrit: "Garudasana arms", desc: "Arms cross and wrap, elbows lift. Stretches back of shoulder -- counter to all the pulling." },
+    ]
+  },
+  "Long holds": {
+    desc: "Holding poses for 2-5 minutes targets fascia and connective tissue rather than just muscles. Fascia needs sustained, moderate stress to remodel.",
+    poses: [
+      { name: "Yin dragon", sanskrit: "Anjaneyasana (yin)", desc: "Low lunge held passively for 3-5 min. The fascia needs this long to release." },
+      { name: "Yin sleeping swan", sanskrit: "Yin Kapotasana", desc: "Pigeon pose held passively for 3-5 min. Targets deep hip rotators." },
+      { name: "Supported fish", sanskrit: "Matsyasana variation", desc: "Block under thoracic spine. Completely passive. Hold 3-5 min." },
+    ]
+  },
+};
+
 let currentDayIdx = new Date().getDay();
-// Convert JS day (0=Sun) to our array (0=Mon)
 currentDayIdx = currentDayIdx === 0 ? 6 : currentDayIdx - 1;
-let activeTimer = null;
-let timerSeconds = 0;
-let timerEl = null;
-let timerLabel = '';
+let activeTimer = null, timerSeconds = 0;
 
-function getStorage() {
-  try { return JSON.parse(localStorage.getItem('fitnessData') || '{}'); } catch { return {}; }
-}
-function setStorage(data) {
-  try { localStorage.setItem('fitnessData', JSON.stringify(data)); } catch {}
-}
-function todayKey() {
-  const d = new Date();
-  return d.toISOString().slice(0, 10);
-}
-function getSessionKey(dateKey, dayIdx) {
-  return dateKey + '_' + dayIdx;
-}
+function getStorage() { try { return JSON.parse(localStorage.getItem('fitnessV3') || '{}'); } catch { return {}; } }
+function setStorage(d) { try { localStorage.setItem('fitnessV3', JSON.stringify(d)); } catch {} }
+function todayKey() { return new Date().toISOString().slice(0, 10); }
+function sessionKey(dayIdx) { return todayKey() + '_' + dayIdx; }
+function checkSvg() { return '<svg viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 6l3 3 5-5"/></svg>'; }
 
-// ---- RENDER ----
 function renderDate() {
-  const d = new Date();
-  document.getElementById('dateStr').textContent = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+  document.getElementById('dateStr').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
 function renderWeekStrip() {
-  const strip = document.getElementById('weekStrip');
   const data = getStorage();
-  strip.innerHTML = days.map((d, i) => {
-    const isActive = i === currentDayIdx;
-    // Check if any session for this day index is completed
-    const isDone = Object.keys(data).some(k => {
-      const parts = k.split('_');
-      return parts.length >= 2 && parseInt(parts[parts.length - 1]) === i && data[k].completed;
-    });
-    return `<div class="day-chip ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}" onclick="selectDay(${i})">
+  document.getElementById('weekStrip').innerHTML = days.map((d, i) => {
+    const isDone = Object.keys(data).some(k => k.split('_').pop() == i && data[k].completed);
+    return `<div class="day-chip ${i===currentDayIdx?'active':''} ${isDone?'done':''} ${d.rest?'rest-day':''}" onclick="selectDay(${i})">
       <span class="chip-label">${d.label}</span>
       <div class="chip-dot"></div>
     </div>`;
   }).join('');
 }
 
-function selectDay(idx) {
-  currentDayIdx = idx;
-  renderWeekStrip();
-  renderSession();
-}
+function selectDay(i) { currentDayIdx = i; renderWeekStrip(); renderSession(); }
 
 function renderSession() {
   const day = days[currentDayIdx];
-  const content = document.getElementById('sessionContent');
   const data = getStorage();
-  const sKey = getSessionKey(todayKey(), currentDayIdx);
-  const session = data[sKey] || { checks: {}, sets: {}, completed: false };
-
-  let html = `
-    <div class="session-header">
-      <h2>${day.type}</h2>
-      <span class="pill ${day.pill}">${day.duration}</span>
-    </div>
-    <p class="session-sub">${day.sub}</p>
-  `;
-
+  const sKey = sessionKey(currentDayIdx);
+  const sess = data[sKey] || { checks: {}, sets: {}, completed: false };
+  let html = `<div class="session-header"><h2>${day.type}</h2><span class="pill ${day.pill}">${day.duration}</span></div>
+    <p class="session-sub">${day.sub}</p>`;
   let exIdx = 0;
-  day.sections.forEach(section => {
-    html += `<div class="section-label">${section.heading}</div>`;
-
-    if (section.yogaFoci) {
-      const yKey = 'yoga_' + section.heading.replace(/\s+/g, '_');
-      const yChecked = session.checks[yKey] || false;
-      html += `<div class="ex-card ${yChecked ? 'completed' : ''}">
+  day.sections.forEach(s => {
+    html += `<div class="section-label">${s.heading}</div>`;
+    if (s.yogaFoci) {
+      const yKey = 'yoga_' + s.heading.replace(/\W+/g,'_');
+      const yDone = sess.checks[yKey] || false;
+      html += `<div class="ex-card ${yDone?'completed':''}">
         <div class="ex-top" style="margin-bottom:10px;">
-          <button class="ex-check ${yChecked ? 'checked' : ''}" onclick="toggleCheck('${yKey}')">
-            <svg viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 6l3 3 5-5"/></svg>
-          </button>
-          <div class="ex-info">
-            <div class="ex-detail">Tap focuses below for pose ideas</div>
-          </div>
+          <button class="ex-check ${yDone?'checked':''}" onclick="toggleCheck('${yKey}')">${checkSvg()}</button>
+          <div class="ex-info"><div class="ex-detail">Tap focus areas below for pose ideas</div></div>
         </div>
-        <div class="yoga-tags">` +
-        section.yogaFoci.map(f => `<span class="yoga-tag" onclick="openYogaSheet('${f.replace(/'/g, "\\'")}')">${f} <span style="color:var(--muted);font-size:10px;">&#9432;</span></span>`).join('') +
-        `</div></div>`;
-    } else if (section.pullup) {
-      html += pullupPhases.map(p => `
-        <div class="phase-box">
-          <div class="phase-label">${p.label}</div>
-          <div class="phase-detail">${p.detail}</div>
-        </div>`).join('');
-      // Add pull-up as checkable exercise
-      const pKey = 'pullup_' + section.heading;
-      const checked = session.checks[pKey] || false;
-      html += `<div class="ex-card ${checked ? 'completed' : ''}">
-        <div class="ex-top">
-          <button class="ex-check ${checked ? 'checked' : ''}" onclick="toggleCheck('${pKey}')">
-            <svg viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 6l3 3 5-5"/></svg>
-          </button>
-          <div class="ex-info">
-            <div class="ex-name">Pull-ups done</div>
-            <div class="ex-detail">Mark when sets are complete</div>
-          </div>
-        </div>
-        ${renderSets(pKey, 3, session)}
+        <div class="yoga-tags">${s.yogaFoci.map(f=>`<span class="yoga-tag" onclick="openSheet('${f.replace(/'/g,"\\'")}')"> ${f} <span style="font-size:10px;opacity:.6;">i</span></span>`).join('')}</div>
       </div>`;
+    } else if (s.pullup) {
+      html += pullupPhases.map(p=>`<div class="phase-box"><div class="phase-label">${p.label}</div><div class="phase-detail">${p.detail}</div></div>`).join('');
+      const pKey='pullup_'+s.heading; const pDone=sess.checks[pKey]||false;
+      html += `<div class="ex-card ${pDone?'completed':''}"><div class="ex-top"><button class="ex-check ${pDone?'checked':''}" onclick="toggleCheck('${pKey}')">${checkSvg()}</button><div class="ex-info"><div class="ex-name">Pull-ups done</div></div></div>${renderSets(pKey,3,sess)}</div>`;
     } else {
-      section.exercises.forEach(ex => {
-        const eKey = 'ex_' + exIdx;
-        const checked = session.checks[eKey] || false;
-        html += `<div class="ex-card ${checked ? 'completed' : ''}" id="excard_${eKey}">
-          <div class="ex-top">
-            <button class="ex-check ${checked ? 'checked' : ''}" onclick="toggleCheck('${eKey}')">
-              <svg viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 6l3 3 5-5"/></svg>
-            </button>
-            <div class="ex-info">
-              <div class="ex-name">${ex.name}</div>
-              ${ex.detail ? `<div class="ex-detail">${ex.detail}</div>` : ''}
-            </div>
-          </div>
-          ${ex.sets ? renderSets(eKey, ex.sets, session) : ''}
-          ${ex.timer ? renderTimer(eKey, ex.timer) : ''}
-          <div style="margin-top:10px;">
-            <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' exercise form')}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:4px 9px;background:var(--surface2);">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
-              Search on YouTube
-            </a>
-          </div>
+      s.exercises.forEach(ex => {
+        const eKey='ex_'+exIdx; const eDone=sess.checks[eKey]||false;
+        const ytQ=encodeURIComponent(ex.name+' exercise form');
+        const actionBtn = ex.info
+          ? `<span class="info-link" onclick="openSheet('${ex.info}')">&#9432; What is this?</span>`
+          : `<a href="https://www.youtube.com/results?search_query=${ytQ}" target="_blank" class="yt-link"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>Search on YouTube</a>`;
+        html += `<div class="ex-card ${eDone?'completed':''}">
+          <div class="ex-top"><button class="ex-check ${eDone?'checked':''}" onclick="toggleCheck('${eKey}')">${checkSvg()}</button>
+          <div class="ex-info"><div class="ex-name">${ex.name}</div>${ex.detail?`<div class="ex-detail">${ex.detail}</div>`:''}</div></div>
+          ${ex.sets?renderSets(eKey,ex.sets,sess):''}${ex.timer?renderTimer(ex.timer):''}
+          ${actionBtn}
         </div>`;
         exIdx++;
       });
     }
   });
-
-  if (day.note) {
-    html += `<div class="session-note">${day.note}</div>`;
+  if (day.note) html += `<div class="session-note">${day.note}</div>`;
+  if (!day.rest) {
+    html += `<button class="complete-btn ${sess.completed?'completed-state':''}" onclick="logSession()">${sess.completed?'Session logged!':'Log session as complete'}</button>`;
   }
-
-  const btnText = session.completed ? 'Session logged!' : 'Log session as complete';
-  const btnClass = session.completed ? 'completed-state' : '';
-  html += `<button class="complete-btn ${btnClass}" onclick="logSession()">${btnText}</button>`;
-
-  content.innerHTML = html;
+  document.getElementById('sessionContent').innerHTML = html;
 }
 
-function renderSets(key, count, session) {
-  const doneSets = session.sets[key] || 0;
-  let btns = '';
-  for (let i = 1; i <= count; i++) {
-    btns += `<button class="set-btn ${i <= doneSets ? 'done' : ''}" onclick="toggleSet('${key}', ${i}, ${count})">${i}</button>`;
-  }
-  return `<div class="set-tracker">${btns}</div>`;
+function renderSets(key, count, sess) {
+  const done = sess.sets[key] || 0;
+  return `<div class="set-tracker">${Array.from({length:count},(_,i)=>`<button class="set-btn ${i<done?'done':''}" onclick="toggleSet('${key}',${i+1},${count})">${i+1}</button>`).join('')}</div>`;
 }
 
-function renderTimer(key, seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  const display = mins > 0 ? `${mins}:${String(secs).padStart(2,'0')}` : `${secs}s`;
-  return `<div class="timer-row">
-    <div class="timer-display" id="timerDisp_${key}">${display}</div>
-    <div class="timer-ctrl">
-      <button class="timer-btn primary" onclick="startTimer('${key}', ${seconds})">Start</button>
-    </div>
-  </div>`;
+function renderTimer(seconds) {
+  const m=Math.floor(seconds/60), s=seconds%60;
+  return `<div class="timer-row"><div class="timer-display">${m>0?m+':'+(String(s).padStart(2,'0')):seconds+'s'}</div><button class="timer-btn primary" onclick="startTimer(${seconds})">Start</button></div>`;
 }
 
-// ---- INTERACTIONS ----
 function toggleCheck(key) {
-  const data = getStorage();
-  const sKey = getSessionKey(todayKey(), currentDayIdx);
-  if (!data[sKey]) data[sKey] = { checks: {}, sets: {}, completed: false };
-  data[sKey].checks[key] = !data[sKey].checks[key];
-  setStorage(data);
-  renderSession();
+  const data=getStorage(), sKey=sessionKey(currentDayIdx);
+  if (!data[sKey]) data[sKey]={checks:{},sets:{},completed:false};
+  data[sKey].checks[key]=!data[sKey].checks[key];
+  setStorage(data); renderSession();
 }
 
-function toggleSet(key, setNum, total) {
-  const data = getStorage();
-  const sKey = getSessionKey(todayKey(), currentDayIdx);
-  if (!data[sKey]) data[sKey] = { checks: {}, sets: {}, completed: false };
-  const current = data[sKey].sets[key] || 0;
-  // Click same set = reset, click next = advance
-  data[sKey].sets[key] = current >= setNum ? setNum - 1 : setNum;
-  // Auto-check if all sets done
-  if (data[sKey].sets[key] >= total) {
-    data[sKey].checks[key] = true;
-  }
-  setStorage(data);
-  renderSession();
+function toggleSet(key,setNum,total) {
+  const data=getStorage(), sKey=sessionKey(currentDayIdx);
+  if (!data[sKey]) data[sKey]={checks:{},sets:{},completed:false};
+  const cur=data[sKey].sets[key]||0;
+  data[sKey].sets[key]=cur>=setNum?setNum-1:setNum;
+  if (data[sKey].sets[key]>=total) data[sKey].checks[key]=true;
+  setStorage(data); renderSession();
 }
 
 function logSession() {
-  const data = getStorage();
-  const sKey = getSessionKey(todayKey(), currentDayIdx);
-  if (!data[sKey]) data[sKey] = { checks: {}, sets: {}, completed: false };
-  data[sKey].completed = true;
-  data[sKey].day = days[currentDayIdx].type;
-  data[sKey].dayLabel = days[currentDayIdx].label;
-  data[sKey].date = todayKey();
-  setStorage(data);
-  renderWeekStrip();
-  renderSession();
+  const data=getStorage(), sKey=sessionKey(currentDayIdx);
+  if (!data[sKey]) data[sKey]={checks:{},sets:{},completed:false};
+  data[sKey].completed=true; data[sKey].day=days[currentDayIdx].type; data[sKey].date=todayKey();
+  setStorage(data); renderWeekStrip(); renderSession();
 }
 
-// ---- TIMER ----
-function startTimer(key, seconds) {
+function startTimer(seconds) {
   if (activeTimer) clearInterval(activeTimer);
-  timerSeconds = seconds;
-  timerLabel = 'Rest / Hold timer';
-  const gt = document.getElementById('globalTimer');
-  gt.classList.add('visible');
-  document.getElementById('globalTimerLabel').textContent = timerLabel;
-  updateGlobalTimerDisplay();
-  activeTimer = setInterval(() => {
+  timerSeconds=seconds;
+  const gt=document.getElementById('globalTimer');
+  gt.classList.add('visible'); updateTimerDisplay();
+  activeTimer=setInterval(()=>{
     timerSeconds--;
-    updateGlobalTimerDisplay();
-    if (timerSeconds <= 0) {
-      clearInterval(activeTimer);
-      activeTimer = null;
-      document.getElementById('globalTimerTime').textContent = 'Done!';
-      setTimeout(() => gt.classList.remove('visible'), 2000);
-      // Vibrate if supported
-      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    updateTimerDisplay();
+    if (timerSeconds<=0) {
+      clearInterval(activeTimer); activeTimer=null;
+      document.getElementById('globalTimerTime').textContent='Done!';
+      if (navigator.vibrate) navigator.vibrate([200,100,200]);
+      setTimeout(()=>gt.classList.remove('visible'),2000);
     }
-  }, 1000);
+  },1000);
 }
 
-function updateGlobalTimerDisplay() {
-  const m = Math.floor(timerSeconds / 60);
-  const s = timerSeconds % 60;
-  document.getElementById('globalTimerTime').textContent = m > 0 ? `${m}:${String(s).padStart(2,'0')}` : `${timerSeconds}s`;
+function updateTimerDisplay() {
+  const m=Math.floor(timerSeconds/60), s=timerSeconds%60;
+  document.getElementById('globalTimerTime').textContent=m>0?`${m}:${String(s).padStart(2,'0')}`:timerSeconds+'s';
 }
 
 function stopGlobalTimer() {
   if (activeTimer) clearInterval(activeTimer);
-  activeTimer = null;
+  activeTimer=null;
   document.getElementById('globalTimer').classList.remove('visible');
 }
 
-// ---- HISTORY ----
-function renderHistory() {
-  const data = getStorage();
-  const content = document.getElementById('historyContent');
-  const sessions = Object.entries(data)
-    .filter(([k, v]) => v.date)
-    .sort((a, b) => b[0].localeCompare(a[0]));
-
-  if (sessions.length === 0) {
-    content.innerHTML = `<div class="history-empty">No sessions logged yet.<br>Complete your first workout<br>and it will appear here.</div>`;
-    return;
-  }
-
-  let html = '';
-  let lastDate = '';
-  sessions.forEach(([key, session]) => {
-    const dateStr = session.date;
-    if (dateStr !== lastDate) {
-      const d = new Date(dateStr + 'T12:00:00');
-      html += `<div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin:16px 0 8px;">${d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</div>`;
-      lastDate = dateStr;
-    }
-    const dayIdx = parseInt(key.split('_').pop());
-    const day = days[dayIdx] || {};
-    const totalChecks = Object.keys(session.checks || {}).length;
-    const doneChecks = Object.values(session.checks || {}).filter(Boolean).length;
-    const pct = totalChecks > 0 ? Math.round((doneChecks / totalChecks) * 100) : 100;
-    html += `<div class="history-card ${session.completed ? 'completed-hist' : ''}">
-      <div class="history-name">${session.day || day.type || 'Session'}</div>
-      <div class="history-progress">${session.completed ? 'Completed' : 'In progress'} &middot; ${doneChecks}/${totalChecks || '?'} exercises checked</div>
-      <div class="history-bar"><div class="history-fill" style="width:${pct}%"></div></div>
-    </div>`;
-  });
-
-  content.innerHTML = html;
-}
-
-// ---- NAV ----
-function showScreen(name) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('screen-' + name).classList.add('active');
-  document.getElementById('nav-' + name).classList.add('active');
-  if (name === 'history') renderHistory();
-}
-
-// ---- YOGA INFO ----
-const yogaInfo = {
-  "Hip flexors": {
-    desc: "The hip flexors are a group of muscles at the front of the hip -- primarily the iliopsoas -- that lift the knee toward the chest. Surfers and people who sit a lot tend to have chronically tight hip flexors, which pulls the pelvis forward and compresses the lower back. Lengthening these muscles improves paddling posture, pop-up mechanics and knee tracking.",
-    poses: [
-      { name: "Low lunge", sanskrit: "Anjaneyasana", desc: "Back knee down, front foot between hands. Sink hips forward and down. The classic hip flexor opener -- hold 90 sec each side." },
-      { name: "Crescent lunge", sanskrit: "Ashta Chandrasana", desc: "Same as low lunge but back knee lifted. Adds quad stretch and balance challenge." },
-      { name: "Lizard pose", sanskrit: "Utthan Pristhasana", desc: "Front foot outside the same-side hand. Deep hip flexor and groin stretch. Can lower the back knee for more intensity." },
-      { name: "Pigeon prep", sanskrit: "Eka Pada Rajakapotasana prep", desc: "Front shin across the mat, back leg extended. Opens hip flexor of the back leg while stretching the glute of the front." },
-    ]
-  },
-  "Glute activation": {
-    desc: "Before strength work, the glutes often need to be 'woken up' -- especially if you sit a lot. Inactive glutes shift load to the knees and lower back. Activation exercises use light, targeted movements to fire the glute med and glute max before they're needed for heavier work.",
-    poses: [
-      { name: "Bridge pose", sanskrit: "Setu Bandha Sarvangasana", desc: "Lying on back, feet flat, press hips up. Squeeze glutes at the top. Good activation before strength sets." },
-      { name: "Warrior III", sanskrit: "Virabhadrasana III", desc: "Standing on one leg, hinge forward with the back leg extending behind. Strong glute activation for the standing leg." },
-      { name: "Chair pose", sanskrit: "Utkatasana", desc: "Feet together or hip-width, sit back as if into a chair. Fires glutes and quads simultaneously." },
-      { name: "Goddess pose", sanskrit: "Utkata Konasana", desc: "Wide stance, toes out, deep squat. Opens hips while activating glutes and inner thighs." },
-    ]
-  },
-  "Pigeon / figure-4 holds": {
-    desc: "These are sustained holds targeting the deep external rotators of the hip -- particularly the piriformis. Tightness here affects knee tracking, lower back comfort and surfing stance. Figure-4 is the gentler supine version; pigeon is the deeper floor version. Both benefit enormously from holding 2-3 minutes rather than rushing through.",
-    poses: [
-      { name: "Sleeping pigeon", sanskrit: "Eka Pada Rajakapotasana (reclined)", desc: "Front shin across mat, fold forward over it. Hold 2-3 min each side. The gold standard for deep external hip rotation." },
-      { name: "Supine figure-4", sanskrit: "Supta Kapotasana", desc: "On your back, cross one ankle over the opposite knee, flex the foot. Gentler than pigeon -- good for knee issues." },
-      { name: "Thread the needle (seated)", sanskrit: "Parivrtta Sukhasana variation", desc: "Seated cross-legged, twist and thread one arm under -- targets the same deep rotators with a spinal twist added." },
-    ]
-  },
-  "Low lunge progression": {
-    desc: "A low lunge progression means gradually deepening the lunge over the course of a session -- starting with the back knee down, then lifting it, then adding a twist or backbend. For knee rehab specifically, it's also about progressively loading the knee into flexion under control, adding a few degrees of depth each week as the joint becomes more comfortable.",
-    poses: [
-      { name: "Low lunge (knee down)", sanskrit: "Anjaneyasana", desc: "Start here. Back knee on mat, hands on front thigh or floor. Focus on sinking hips, not arching back." },
-      { name: "Crescent lunge (knee up)", sanskrit: "Ashta Chandrasana", desc: "Progress here once the low lunge feels stable. Back knee lifts, arms reach up." },
-      { name: "Twisted lunge", sanskrit: "Parivrtta Anjaneyasana", desc: "From lunge, twist toward the front knee. Adds thoracic rotation on top of the hip flexor stretch." },
-      { name: "High lunge with backbend", sanskrit: "Alanasana variation", desc: "Arms up, gentle lift through the chest. Full progression -- hip flexor, quad, thoracic extension all in one." },
-    ]
-  },
-  "Gentle knee flexion": {
-    desc: "For your meniscus rehab, gently loading the knee into progressive flexion -- rather than avoiding it -- is exactly what builds tolerance and restores range. The goal is to find the edge of comfortable range and hold there briefly, adding a few degrees each week. Never force it; pain is a signal to back off.",
-    poses: [
-      { name: "Hero pose", sanskrit: "Virasana", desc: "Kneeling, sit back between the heels. Start with a block under the sit bones and reduce height over weeks. Classic progressive knee flexion." },
-      { name: "Child's pose", sanskrit: "Balasana", desc: "Kneel and fold forward. Gentle passive knee flexion with gravity -- good gauge of where your range is today." },
-      { name: "Thunderbolt pose", sanskrit: "Vajrasana", desc: "Kneeling, sitting on the heels (not between them). Simpler than hero pose, good starting point." },
-      { name: "Supported squat", sanskrit: "Malasana (supported)", desc: "Deep squat with heels elevated on a rolled mat or block. Builds toward full squat depth -- highly relevant for surfing." },
-    ]
-  },
-  "Thoracic rotation": {
-    desc: "The thoracic spine -- the 12 vertebrae of the mid and upper back -- is designed to rotate, but modern posture (desk work, paddling, rowing) tends to lock it up. Restricted thoracic rotation forces compensation from the lower back and shoulders. For surfing, free thoracic rotation is essential for reading waves, trimming and turning.",
-    poses: [
-      { name: "Seated spinal twist", sanskrit: "Ardha Matsyendrasana", desc: "Seated, one leg extended, other foot crosses over. Twist toward the bent knee. The classic thoracic rotator." },
-      { name: "Supine twist", sanskrit: "Supta Matsyendrasana", desc: "On your back, knees fall to one side while arms open wide. Gentle and accessible -- good for daily rotation maintenance." },
-      { name: "Thread the needle", sanskrit: "Parsva Balasana", desc: "On hands and knees, thread one arm under the body and rest the shoulder on the floor. Deep thoracic rotation with gravity assist." },
-      { name: "Revolved triangle", sanskrit: "Parivrtta Trikonasana", desc: "Standing, wide stance, one hand to the floor, other arm reaches up. Strong thoracic rotation with hamstring stretch." },
-    ]
-  },
-  "Shoulder opening": {
-    desc: "Paddling and rowing both involve a lot of internal shoulder rotation and forward reach. Over time this shortens the chest and anterior shoulder, pulls the shoulders forward and can impinge the rotator cuff. Shoulder opening works to reverse this -- lengthening the pec minor, anterior deltoid and biceps tendon -- and is essential for long-term shoulder health.",
-    poses: [
-      { name: "Cow face arms", sanskrit: "Gomukhasana (arms only)", desc: "One arm reaches up and bends behind the head, other reaches down and bends up behind the back. They aim to clasp. Deep shoulder opener for both sides simultaneously." },
-      { name: "Eagle arms", sanskrit: "Garudasana (arms only)", desc: "Arms cross and wrap, elbows lift. Stretches the back of the shoulder and scapular region -- counter to all the pulling work." },
-      { name: "Doorframe chest stretch", sanskrit: "No Sanskrit -- functional", desc: "Stand in a doorframe, arms at 90 degrees on the frame, walk through. Direct anterior shoulder and pec stretch." },
-      { name: "Puppy pose", sanskrit: "Uttana Shishosana", desc: "On hands and knees, walk hands forward and lower chest toward floor, hips stay over knees. Opens the whole shoulder girdle and thoracic spine." },
-    ]
-  },
-  "Chest + pec stretch": {
-    desc: "The pectoralis major and minor get chronically shortened by paddling, rowing, and any pushing or reaching forward. Tight pecs internally rotate the shoulder, compress the chest and contribute to the rounded-shoulder posture that's so common in surfers. Stretching the pecs regularly keeps the shoulder in a healthier position and reduces injury risk.",
-    poses: [
-      { name: "Fish pose", sanskrit: "Matsyasana", desc: "On your back, arch the upper back, crown of head lightly on floor, chest opens to ceiling. Passive pec opener -- hold 1-2 min." },
-      { name: "Supported fish (on block)", sanskrit: "Matsyasana variation", desc: "Block under the thoracic spine. Lets you fully relax and passively open the chest. Very effective." },
-      { name: "Camel pose", sanskrit: "Ustrasana", desc: "Kneeling, hands to heels, chest lifts. Strong active chest and shoulder opener -- also a hip flexor stretch." },
-      { name: "Sphinx pose", sanskrit: "Salamba Bhujangasana", desc: "Prone, forearms on floor, gentle chest lift. Entry-level backbend that opens the pecs without compressing the lower back." },
-    ]
-  },
-  "Spinal extension": {
-    desc: "Spinal extension -- bending backward -- counteracts the flexed-forward posture of surfing, paddling, and sitting. It decompresses the vertebral discs, opens the front body, and strengthens the posterior chain along the spine. For surfers, it also directly trains the pop-up position.",
-    poses: [
-      { name: "Cobra pose", sanskrit: "Bhujangasana", desc: "Prone, hands under shoulders, lift the chest. Keep elbows soft. Entry-level backbend -- directly mimics the pop-up position." },
-      { name: "Upward facing dog", sanskrit: "Urdhva Mukha Svanasana", desc: "Like cobra but arms fully extended and thighs off the floor. More demanding version of the same shape." },
-      { name: "Bow pose", sanskrit: "Dhanurasana", desc: "Prone, bend knees, reach back and hold ankles, lift chest and thighs. Full spinal extension and quad stretch." },
-      { name: "Bridge pose", sanskrit: "Setu Bandha Sarvangasana", desc: "Supine backbend -- gentler on the lumbar spine than floor backbends. Great for spinal extension with glute activation." },
-    ]
-  },
-  "Ankle + foot mobility": {
-    desc: "Ankle dorsiflexion -- the ability to bend the ankle so the shin moves toward the foot -- is directly limiting for squat depth, surf stance and knee tracking. Restricted ankles force the knee to collapse inward or the heel to rise, both of which load the knee badly. Foot mobility also matters for balance on the board and comfort in kneeling positions.",
-    poses: [
-      { name: "Toes pose", sanskrit: "Prapadasana", desc: "Kneel sitting on the heels with toes tucked under. Intense stretch for the plantar fascia and toe extensors. Hold 1-2 min -- it burns, but it works." },
-      { name: "Ankle circles in easy pose", sanskrit: "Sukhasana variation", desc: "Seated, place one foot on the opposite thigh and circle the ankle slowly. Improves joint lubrication and range." },
-      { name: "Squat pose", sanskrit: "Malasana", desc: "Deep squat, heels down if possible. Directly trains ankle dorsiflexion and calf flexibility -- the limiting factor for most people's squat depth." },
-      { name: "Standing calf stretch at wall", sanskrit: "No Sanskrit -- functional", desc: "Hands on wall, one foot back, heel pressed down. Targets the gastrocnemius. Directly improves ankle dorsiflexion." },
-    ]
-  },
-  "Full body release": {
-    desc: "A full body release session uses long, passive holds to systematically let go of accumulated tension from the week's training. The goal is parasympathetic activation -- the nervous system shifting from 'work' mode to 'recover' mode. This is where the physical adaptations from your training actually consolidate.",
-    poses: [
-      { name: "Legs up the wall", sanskrit: "Viparita Karani", desc: "Lie on your back, legs vertical against a wall. Reverses blood flow, calms the nervous system. Hold 5-10 min." },
-      { name: "Reclined butterfly", sanskrit: "Supta Baddha Konasana", desc: "On your back, soles of feet together, knees fall wide. Passive hip opener -- add a bolster under the spine for a chest opener too." },
-      { name: "Supine twist", sanskrit: "Supta Matsyendrasana", desc: "On your back, knees to one side. Hold 3 min each side. Releases the thoracic and lumbar spine." },
-      { name: "Savasana", sanskrit: "Savasana", desc: "Full relaxation pose. Don't skip it or rush it -- this is where integration happens. 5 min minimum." },
-    ]
-  },
-  "Long holds": {
-    desc: "Holding poses for 2-5 minutes rather than 30-60 seconds targets the fascia and connective tissue rather than just the muscles. Fascia responds slowly -- it needs sustained, moderate stress to remodel. Long holds also train mental stillness and breath awareness, which directly transfers to surfing composure.",
-    poses: [
-      { name: "Yin dragon", sanskrit: "Variation of Anjaneyasana", desc: "Low lunge, back knee down, held for 3-5 min. The fascia around the hip flexor needs this long to release." },
-      { name: "Yin sleeping swan", sanskrit: "Yin Kapotasana", desc: "Pigeon pose held passively for 3-5 min. Targets the deep hip rotators through sustained load." },
-      { name: "Yin shoelace", sanskrit: "Yin Gomukhasana", desc: "Legs stacked like crossed shoelaces, folded forward. Deep outer hip and glute stretch. Hold 3-4 min each side." },
-      { name: "Supported fish", sanskrit: "Matsyasana variation", desc: "Block under thoracic spine, arms wide. Completely passive chest and shoulder opener. Hold 3-5 min." },
-    ]
-  },
-  "Hip + hamstring": {
-    desc: "The hamstrings and hips are deeply connected -- the hamstrings attach to the sitting bones of the pelvis, so tight hamstrings tilt the pelvis and affect everything above and below. For surfing, hamstring flexibility improves forward bend, pop-up landing position and reduces lower back compression during paddling.",
-    poses: [
-      { name: "Seated forward fold", sanskrit: "Paschimottanasana", desc: "Legs extended, fold forward. Keep the spine long rather than rounding -- use a strap around the feet if needed." },
-      { name: "Pyramid pose", sanskrit: "Parsvottanasana", desc: "Standing, one foot forward, hinge over the front leg. Intense hamstring stretch with a hip flexor stretch on the back leg." },
-      { name: "Half splits", sanskrit: "Ardha Hanumanasana", desc: "From lunge, straighten the front leg, fold forward. The most targeted hamstring stretch -- excellent for surfers." },
-      { name: "Reclined hand to big toe", sanskrit: "Supta Padangusthasana", desc: "On your back, loop a strap around one foot and straighten the leg toward the ceiling. Hamstring stretch without lower back involvement." },
-    ]
-  },
-  "Breath work": {
-    desc: "Breath work (pranayama) on a recovery day serves two purposes: it activates the parasympathetic nervous system to accelerate recovery, and it trains the breath control that's directly useful in the water -- holding a breath through a hold-down, staying calm in big surf, conserving energy during a long paddle. Even 5-10 minutes makes a meaningful difference.",
-    poses: [
-      { name: "Box breathing", sanskrit: "No Sanskrit", desc: "Inhale 4 counts, hold 4, exhale 4, hold 4. Calms the nervous system rapidly. Used by athletes and special forces alike." },
-      { name: "Nadi Shodhana", sanskrit: "Nadi Shodhana Pranayama", desc: "Alternate nostril breathing. Balances the left and right hemispheres, deeply calming. 5-10 rounds." },
-      { name: "Extended exhale", sanskrit: "No Sanskrit", desc: "Inhale for 4 counts, exhale for 8. The longer exhale activates the vagus nerve and parasympathetic response. Simple and effective." },
-      { name: "Ujjayi breath", sanskrit: "Ujjayi Pranayama", desc: "Ocean breath -- slight constriction at the back of the throat creates a wave-like sound. Anchors attention to breath during yoga holds." },
-    ]
-  },
-  "Lower intensity than Tue/Thu": {
-    desc: "Sunday yoga is deliberately easier than Tuesday and Thursday. Where those sessions use your yoga practice as a strength and mobility tool, Sunday is pure recovery -- lower effort, more passive, longer holds, more floor work. The nervous system needs this contrast to adapt properly. Think of it as the difference between training and restoration.",
-    poses: [
-      { name: "Child's pose", sanskrit: "Balasana", desc: "The default resting pose -- return to it whenever you need a break. Hold for as long as you like." },
-      { name: "Reclined butterfly", sanskrit: "Supta Baddha Konasana", desc: "Passive hip opener on the floor. Add a bolster for more support. The definition of restorative yoga." },
-      { name: "Legs up the wall", sanskrit: "Viparita Karani", desc: "Passive inversion, zero effort. Deeply restorative for the legs and nervous system after a week of training." },
-      { name: "Savasana", sanskrit: "Savasana", desc: "End here, always. Minimum 5 minutes. Let everything integrate." },
-    ]
-  },
-};
-
-function openYogaSheet(term) {
-  const info = yogaInfo[term];
-  if (!info) return;
-  document.getElementById('sheetTitle').textContent = term;
-  document.getElementById('sheetDesc').textContent = info.desc;
-  document.getElementById('sheetPoses').innerHTML = info.poses.map(p => `
-    <div class="pose-card">
-      <div class="pose-name">${p.name} <span class="pose-sanskrit">${p.sanskrit}</span></div>
-      <div class="pose-desc">${p.desc}</div>
-    </div>
-  `).join('');
+function openSheet(term) {
+  const info=yogaInfo[term]; if (!info) return;
+  document.getElementById('sheetTitle').textContent=term==='sunsal'?'Sun salutations A + B':term;
+  document.getElementById('sheetDesc').textContent=info.desc;
+  document.getElementById('sheetPoses').innerHTML=info.poses.map(p=>`<div class="pose-card"><div class="pose-name">${p.name} <span class="pose-sanskrit">${p.sanskrit}</span></div><div class="pose-desc">${p.desc}</div></div>`).join('');
   document.getElementById('sheetBackdrop').classList.add('visible');
   document.getElementById('yogaSheet').classList.add('visible');
 }
@@ -1143,14 +485,35 @@ function closeSheet() {
   document.getElementById('yogaSheet').classList.remove('visible');
 }
 
-// ---- INIT ----
-renderDate();
-renderWeekStrip();
-renderSession();
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
+function renderHistory() {
+  const data=getStorage();
+  const sessions=Object.entries(data).filter(([,v])=>v.date).sort((a,b)=>b[0].localeCompare(a[0]));
+  if (!sessions.length) { document.getElementById('historyContent').innerHTML='<div class="history-empty">No sessions logged yet.<br>Complete your first workout<br>and it will appear here.</div>'; return; }
+  let html='', lastDate='';
+  sessions.forEach(([key,sess])=>{
+    if (sess.date!==lastDate) {
+      html+=`<div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin:16px 0 8px;">${new Date(sess.date+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})}</div>`;
+      lastDate=sess.date;
+    }
+    const dayIdx=parseInt(key.split('_').pop()), day=days[dayIdx]||{};
+    const total=Object.keys(sess.checks||{}).length, done=Object.values(sess.checks||{}).filter(Boolean).length;
+    const pct=total>0?Math.round(done/total*100):100;
+    html+=`<div class="history-card ${sess.completed?'completed-hist':''}"><div class="history-name">${sess.day||day.type||'Session'}</div><div class="history-progress">${sess.completed?'Completed':'In progress'} &middot; ${done}/${total||'?'} checked</div><div class="history-bar"><div class="history-fill" style="width:${pct}%"></div></div></div>`;
+  });
+  document.getElementById('historyContent').innerHTML=html;
 }
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+  if (name==='history') renderHistory();
+}
+
+document.getElementById('sheetBackdrop').addEventListener('click', closeSheet);
+renderDate(); renderWeekStrip(); renderSession();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/Fitness-App/sw.js').catch(()=>{});
 </script>
 </body>
 </html>
